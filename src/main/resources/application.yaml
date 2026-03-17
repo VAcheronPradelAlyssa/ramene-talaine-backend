@@ -1,3 +1,13 @@
 spring:
   application:
     name: ramene-talaine-backend
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info   # ou "*" pour tout exposer (déconseillé en prod)
+  endpoint:
+    health:
+      show-details: always      # affiche les détails (DB, disk, etc.)
