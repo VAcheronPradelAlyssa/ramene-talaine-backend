@@ -19,9 +19,8 @@ public class AuthController {
         try {
             User created = userService.register(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            // Email déjà utilisé, etc.
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ou surnom déjà utilisé");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur lors de l'inscription");
         }
