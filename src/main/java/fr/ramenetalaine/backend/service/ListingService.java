@@ -3,6 +3,7 @@ package fr.ramenetalaine.backend.service;
 import fr.ramenetalaine.backend.model.Listing;
 import fr.ramenetalaine.backend.model.ListingType;
 import fr.ramenetalaine.backend.repository.ListingRepository;
+import fr.ramenetalaine.backend.exception.ListingNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class ListingService {
 
     public Listing getListingById(Long id) {
         return listingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Annonce introuvable"));
+                .orElseThrow(() -> new ListingNotFoundException(id));
     }
 
     public void deleteListing(Long id) {
         if (!listingRepository.existsById(id)) {
-            throw new IllegalArgumentException("Annonce introuvable");
+            throw new ListingNotFoundException(id);
         }
         listingRepository.deleteById(id);
     }
