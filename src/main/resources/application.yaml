@@ -3,9 +3,9 @@ spring:
     name: ramene-talaine-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ramene_talaine
-    username: ramene_admin
-    password: ChangeMe123!
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -16,6 +16,9 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+server:
+  port: ${PORT:8080}
 
 management:
   endpoints:
