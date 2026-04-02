@@ -54,4 +54,12 @@ public class AuthenticationService {
         }
         return Optional.ofNullable(tokenStore.get(token));
     }
+
+    public User getCurrentUser(String token) {
+        String userId = getUserIdFromToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Token invalide"));
+
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable pour ce token"));
+    }
 }
