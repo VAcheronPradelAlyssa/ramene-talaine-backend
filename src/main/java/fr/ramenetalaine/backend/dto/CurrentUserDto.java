@@ -8,6 +8,9 @@ import lombok.Data;
 @Builder
 public class CurrentUserDto {
     private String id;
+    private String prenom;
+    private String nom;
+    private String surnom;
     private String email;
     private LocalDateTime createdAt;
 }

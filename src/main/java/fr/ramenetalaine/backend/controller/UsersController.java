@@ -26,6 +26,9 @@ public class UsersController {
 
             CurrentUserDto response = CurrentUserDto.builder()
                     .id(currentUser.getId())
+                    .prenom(currentUser.getPrenom())
+                    .nom(currentUser.getNom())
+                    .surnom(currentUser.getSurnom())
                     .email(currentUser.getEmail())
                     .createdAt(currentUser.getCreatedAt())
                     .build();
