@@ -45,13 +45,9 @@ public class ListingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getListingById(@PathVariable Long id) {
-        try {
-            Listing listing = listingService.getListingById(id);
-            return ResponseEntity.ok(toResponseDto(listing));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<ListingResponseDto> getListingById(@PathVariable Long id) {
+        Listing listing = listingService.getListingById(id);
+        return ResponseEntity.ok(toResponseDto(listing));
     }
 
     @DeleteMapping("/{id}")
