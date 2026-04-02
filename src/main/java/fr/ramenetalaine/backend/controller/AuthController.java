@@ -1,7 +1,10 @@
 package fr.ramenetalaine.backend.controller;
 
+import fr.ramenetalaine.backend.dto.LoginResponseDto;
+import fr.ramenetalaine.backend.dto.UserLoginDto;
 import fr.ramenetalaine.backend.dto.UserSignupDto;
 import fr.ramenetalaine.backend.model.User;
+import fr.ramenetalaine.backend.service.AuthenticationService;
 import fr.ramenetalaine.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserSignupDto dto) {
@@ -23,6 +27,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur lors de l'inscription");
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginDto dto) {
+        try {
+            String token = authenticationService.login(dto.getEmail(), dto.getPassword());
+            return ResponseEntity.ok(new LoginResponseDto(token));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 }
