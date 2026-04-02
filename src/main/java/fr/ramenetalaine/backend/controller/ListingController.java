@@ -77,6 +77,7 @@ public class ListingController {
                 .price(request.getPrice())
                 .city(request.getCity())
                 .postalCode(request.getPostalCode())
+                .imageUrls(request.getImageUrls())
                 .build();
     }
 
@@ -94,6 +95,7 @@ public class ListingController {
                 .price(listing.getPrice())
                 .city(listing.getCity())
                 .postalCode(listing.getPostalCode())
+                .imageUrls(listing.getImageUrls())
                 .createdAt(listing.getCreatedAt())
                 .build();
     }

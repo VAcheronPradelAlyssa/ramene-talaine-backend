@@ -1,12 +1,15 @@
 package fr.ramenetalaine.backend.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -14,6 +17,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -62,6 +66,11 @@ public class Listing {
 
     private String city;
     private String postalCode;
+
+    @ElementCollection
+    @CollectionTable(name = "listing_image_urls", joinColumns = @JoinColumn(name = "listing_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -2,6 +2,7 @@ package fr.ramenetalaine.backend.dto;
 
 import fr.ramenetalaine.backend.model.ListingType;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,5 +21,6 @@ public class ListingResponseDto {
     private Double price;
     private String city;
     private String postalCode;
+    private List<String> imageUrls;
     private LocalDateTime createdAt;
 }

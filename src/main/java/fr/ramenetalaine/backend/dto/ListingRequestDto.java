@@ -3,6 +3,7 @@ package fr.ramenetalaine.backend.dto;
 import fr.ramenetalaine.backend.model.ListingType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -24,4 +25,5 @@ public class ListingRequestDto {
     private Double price;
     private String city;
     private String postalCode;
+    private List<String> imageUrls;
 }
