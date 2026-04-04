@@ -22,6 +22,7 @@ public class ListingController {
     private final BrandRepository brandRepository;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final fr.ramenetalaine.backend.repository.CompositionRepository compositionRepository;
 
     @PostMapping
     public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request, @RequestHeader("Authorization") String authorizationHeader) {
@@ -100,20 +101,38 @@ public class ListingController {
                     .orElseGet(() -> brandRepository.save(new Brand(customBrand.trim())));
         }
         Listing listing = Listing.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .brand(brand)
-                .customBrand((customBrand != null && !customBrand.isBlank()) ? customBrand.trim() : null)
-                .color(request.getColor())
-                .weight(request.getWeight())
-                .length(request.getLength())
-                .type(request.getType())
-                .price(request.getPrice())
-                .city(request.getCity())
-                .postalCode(request.getPostalCode())
-                .imageUrls(request.getImageUrls())
-                .seller(seller)
-                .build();
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .brand(brand)
+            .customBrand((customBrand != null && !customBrand.isBlank()) ? customBrand.trim() : null)
+            .color(request.getColor())
+            .weight(request.getWeight())
+            .length(request.getLength())
+            .type(request.getType())
+            .price(request.getPrice())
+            .city(request.getCity())
+            .postalCode(request.getPostalCode())
+            .imageUrls(request.getImageUrls())
+            .seller(seller)
+            .build();
+
+        // Ajout des compositions si présentes dans le DTO (par id)
+        if (request.getCompositions() != null && !request.getCompositions().isEmpty()) {
+            List<ListingComposition> listingCompositions = new ArrayList<>();
+            for (CompositionRequestDto compoDto : request.getCompositions()) {
+                if (compoDto.getCompositionId() == null) {
+                    throw new IllegalArgumentException("compositionId manquant dans CompositionRequestDto");
+                }
+                Composition composition = compositionRepository.findById(compoDto.getCompositionId())
+                        .orElseThrow(() -> new IllegalArgumentException("Composition non trouvée pour id : " + compoDto.getCompositionId()));
+                ListingComposition lc = new ListingComposition();
+                lc.setListing(listing);
+                lc.setComposition(composition);
+                lc.setPercentage(compoDto.getPercentage());
+                listingCompositions.add(lc);
+            }
+            listing.setListingCompositions(listingCompositions);
+        }
         return listing;
     }
 

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CompositionRequestDto {
-    private String material;
+    private Long compositionId;
     private Integer percentage; // Peut être null
 }
