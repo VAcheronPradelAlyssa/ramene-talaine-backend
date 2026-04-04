@@ -55,15 +55,20 @@ public class ListingController {
 
     private Listing toEntity(ListingRequestDto request) {
         Brand brand = null;
+        String customBrand = request.getCustomBrand();
         if (request.getBrandId() != null) {
             brand = brandRepository.findById(request.getBrandId())
                     .orElseThrow(() -> new IllegalArgumentException("Marque non trouvée"));
+        } else if (customBrand != null && !customBrand.isBlank()) {
+            brand = brandRepository.findByName(customBrand.trim())
+                    .orElseGet(() -> brandRepository.save(new Brand(customBrand.trim())));
         }
+        // Toujours setter le champ brand, même pour customBrand
         return Listing.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .brand(brand)
-                .customBrand(request.getCustomBrand())
+                .customBrand((customBrand != null && !customBrand.isBlank()) ? customBrand.trim() : null)
                 .composition(request.getComposition())
                 .color(request.getColor())
                 .weight(request.getWeight())
