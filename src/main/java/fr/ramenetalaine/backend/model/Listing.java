@@ -35,9 +35,14 @@ public class Listing {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
     private String customBrand;
     private String composition;

@@ -2,6 +2,7 @@ package fr.ramenetalaine.backend.controller;
 
 import fr.ramenetalaine.backend.dto.*;
 import fr.ramenetalaine.backend.model.*;
+import fr.ramenetalaine.backend.exception.ListingNotFoundException;
 import fr.ramenetalaine.backend.repository.BrandRepository;
 import fr.ramenetalaine.backend.service.ListingService;
 import jakarta.validation.Valid;
@@ -45,6 +46,8 @@ public class ListingController {
             if (listing.getBrand() != null) {
                 brandDto = new BrandDto(listing.getBrand().getId(), listing.getBrand().getName());
             }
+            String username = listing.getSeller() != null ? listing.getSeller().getSurnom() : null;
+            String image = (listing.getImageUrls() != null && !listing.getImageUrls().isEmpty()) ? listing.getImageUrls().get(0) : null;
             ListingDetailsDto dto = new ListingDetailsDto(
                 listing.getId(),
                 listing.getTitle(),
@@ -55,7 +58,10 @@ public class ListingController {
                 listing.getWeight(),
                 listing.getLength(),
                 brandDto,
-                listing.getCustomBrand()
+                listing.getCustomBrand(),
+                username,
+                listing.getCreatedAt(),
+                image
             );
             return ResponseEntity.ok(dto);
         } catch (ListingNotFoundException e) {

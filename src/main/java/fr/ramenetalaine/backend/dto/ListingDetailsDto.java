@@ -2,6 +2,7 @@ package fr.ramenetalaine.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,7 @@ public class ListingDetailsDto {
     private Integer length;
     private BrandDto brand;
     private String customBrand;
+    private String username;
+    private LocalDateTime createdAt;
+    private String image;
 }
