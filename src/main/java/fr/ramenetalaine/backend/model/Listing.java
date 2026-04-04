@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -45,6 +46,10 @@ public class Listing {
     private User seller;
 
     private String customBrand;
+    // Relation OneToMany avec Composition
+    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Composition> compositions = new ArrayList<>();
+
     private String composition;
     private String color;
 
