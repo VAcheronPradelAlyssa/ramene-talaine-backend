@@ -4,6 +4,8 @@ import fr.ramenetalaine.backend.dto.*;
 import fr.ramenetalaine.backend.model.*;
 import fr.ramenetalaine.backend.exception.ListingNotFoundException;
 import fr.ramenetalaine.backend.repository.BrandRepository;
+import fr.ramenetalaine.backend.repository.UserRepository;
+import fr.ramenetalaine.backend.service.AuthenticationService;
 import fr.ramenetalaine.backend.service.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,18 @@ import java.util.*;
 public class ListingController {
     private final ListingService listingService;
     private final BrandRepository brandRepository;
+    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @PostMapping
-    public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request) {
+    public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request, @RequestHeader("Authorization") String authorizationHeader) {
         try {
-            Listing listingToCreate = toEntity(request);
+            // Récupère le token (suppose format "Bearer <token>")
+            String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                    ? authorizationHeader.substring(7)
+                    : authorizationHeader;
+            User currentUser = authenticationService.getCurrentUser(token);
+            Listing listingToCreate = toEntity(request, currentUser);
             Listing created = listingService.createListing(listingToCreate);
             return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDto(created));
         } catch (IllegalArgumentException e) {
@@ -79,7 +88,7 @@ public class ListingController {
         }
     }
 
-    private Listing toEntity(ListingRequestDto request) {
+    private Listing toEntity(ListingRequestDto request, User seller) {
         Brand brand = null;
         String customBrand = request.getCustomBrand();
         if (request.getBrandId() != null) {
@@ -104,6 +113,7 @@ public class ListingController {
                 .city(request.getCity())
                 .postalCode(request.getPostalCode())
                 .imageUrls(request.getImageUrls())
+                .seller(seller)
                 .build();
     }
 
