@@ -99,28 +99,11 @@ public class ListingController {
             brand = brandRepository.findByName(customBrand.trim())
                     .orElseGet(() -> brandRepository.save(new Brand(customBrand.trim())));
         }
-        // Mapping des compositions
-        List<Composition> compositions = new java.util.ArrayList<>();
-        if (request.getCompositions() != null && !request.getCompositions().isEmpty()) {
-            for (CompositionRequestDto compDto : request.getCompositions()) {
-                Integer percent = compDto.getPercentage();
-                // Si percentage est null, on met 100 si une seule composition, sinon 0 (à adapter selon logique métier)
-                if (percent == null) {
-                    percent = (request.getCompositions().size() == 1) ? 100 : null;
-                }
-                Composition comp = Composition.builder()
-                        .material(compDto.getMaterial())
-                        .percentage(percent)
-                        .build();
-                compositions.add(comp);
-            }
-        }
         Listing listing = Listing.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .brand(brand)
                 .customBrand((customBrand != null && !customBrand.isBlank()) ? customBrand.trim() : null)
-                .composition(request.getComposition())
                 .color(request.getColor())
                 .weight(request.getWeight())
                 .length(request.getLength())
@@ -130,12 +113,7 @@ public class ListingController {
                 .postalCode(request.getPostalCode())
                 .imageUrls(request.getImageUrls())
                 .seller(seller)
-                .compositions(compositions)
                 .build();
-        // Lien inverse pour chaque composition
-        for (Composition comp : compositions) {
-            comp.setListing(listing);
-        }
         return listing;
     }
 

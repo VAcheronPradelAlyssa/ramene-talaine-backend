@@ -15,12 +15,6 @@ public class Composition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String material;
-
-    private Integer percentage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id", nullable = false)
-    private Listing listing;
+    @Column(nullable = false, unique = true)
+    private String name;
 }

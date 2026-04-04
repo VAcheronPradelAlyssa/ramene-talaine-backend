@@ -46,9 +46,10 @@ public class Listing {
     private User seller;
 
     private String customBrand;
-    // Relation OneToMany avec Composition
+
+    // Relation OneToMany avec ListingComposition (table de jointure)
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Composition> compositions = new ArrayList<>();
+    private List<ListingComposition> listingCompositions = new ArrayList<>();
 
     private String composition;
     private String color;
