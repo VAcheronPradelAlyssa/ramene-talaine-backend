@@ -23,6 +23,7 @@ public class ListingController {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
     private final fr.ramenetalaine.backend.repository.CompositionRepository compositionRepository;
+    private final fr.ramenetalaine.backend.repository.ColorRepository colorRepository;
 
     @PostMapping
     public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request, @RequestHeader("Authorization") String authorizationHeader) {
@@ -178,6 +179,21 @@ public class ListingController {
         if (listing.getBrand() != null) {
             brandDto = new BrandDto(listing.getBrand().getId(), listing.getBrand().getName());
         }
+        List<ListingColorResponseDto> colorDtos = new ArrayList<>();
+        if (listing.getListingColors() != null) {
+            for (ListingColor lc : listing.getListingColors()) {
+                ListingColorResponseDto.ListingColorResponseDtoBuilder builder = ListingColorResponseDto.builder();
+                if (lc.getColor() != null) {
+                    builder.colorId(lc.getColor().getId())
+                           .colorName(lc.getColor().getName())
+                           .groupName(lc.getColor().getGroupName());
+                }
+                if (lc.getCustomColor() != null && !lc.getCustomColor().isBlank()) {
+                    builder.customColor(lc.getCustomColor());
+                }
+                colorDtos.add(builder.build());
+            }
+        }
         return ListingResponseDto.builder()
                 .id(listing.getId())
                 .title(listing.getTitle())
@@ -185,7 +201,7 @@ public class ListingController {
                 .brand(brandDto)
                 .customBrand(listing.getCustomBrand())
                 .composition(listing.getComposition())
-                .color(listing.getColor())
+                .colors(colorDtos)
                 .weight(listing.getWeight())
                 .length(listing.getLength())
                 .type(listing.getType())

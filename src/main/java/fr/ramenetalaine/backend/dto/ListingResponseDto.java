@@ -15,7 +15,7 @@ public class ListingResponseDto {
     private BrandDto brand;
     private String customBrand;
     private String composition;
-    private String color;
+    private List<ListingColorResponseDto> colors;
     private Integer weight;
     private Integer length;
     private ListingType type;
