@@ -38,9 +38,29 @@ public class ListingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ListingResponseDto> getListingById(@PathVariable Long id) {
-        Listing listing = listingService.getListingById(id);
-        return ResponseEntity.ok(toResponseDto(listing));
+    public ResponseEntity<ListingDetailsDto> getListingDetailsById(@PathVariable Long id) {
+        try {
+            Listing listing = listingService.getListingById(id);
+            BrandDto brandDto = null;
+            if (listing.getBrand() != null) {
+                brandDto = new BrandDto(listing.getBrand().getId(), listing.getBrand().getName());
+            }
+            ListingDetailsDto dto = new ListingDetailsDto(
+                listing.getId(),
+                listing.getTitle(),
+                listing.getDescription(),
+                listing.getPrice(),
+                listing.getCity(),
+                listing.getPostalCode(),
+                listing.getWeight(),
+                listing.getLength(),
+                brandDto,
+                listing.getCustomBrand()
+            );
+            return ResponseEntity.ok(dto);
+        } catch (ListingNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/{id}")
