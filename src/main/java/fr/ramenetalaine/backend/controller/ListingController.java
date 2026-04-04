@@ -59,6 +59,21 @@ public class ListingController {
             }
             String username = listing.getSeller() != null ? listing.getSeller().getSurnom() : null;
             String image = (listing.getImageUrls() != null && !listing.getImageUrls().isEmpty()) ? listing.getImageUrls().get(0) : null;
+
+            // Construction de la liste des compositions (matériaux)
+            List<CompositionResponseDto> compositions = new ArrayList<>();
+            if (listing.getListingCompositions() != null) {
+                for (ListingComposition lc : listing.getListingCompositions()) {
+                    if (lc.getComposition() != null) {
+                        compositions.add(new CompositionResponseDto(
+                                lc.getComposition().getId(),
+                                lc.getComposition().getName(),
+                                lc.getPercentage()
+                        ));
+                    }
+                }
+            }
+
             ListingDetailsDto dto = new ListingDetailsDto(
                 listing.getId(),
                 listing.getTitle(),
@@ -72,7 +87,8 @@ public class ListingController {
                 listing.getCustomBrand(),
                 username,
                 listing.getCreatedAt(),
-                image
+                image,
+                compositions
             );
             return ResponseEntity.ok(dto);
         } catch (ListingNotFoundException e) {

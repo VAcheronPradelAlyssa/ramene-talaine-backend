@@ -2,10 +2,13 @@ package fr.ramenetalaine.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ListingDetailsDto {
     private Long id;
     private String title;
@@ -20,4 +23,7 @@ public class ListingDetailsDto {
     private String username;
     private LocalDateTime createdAt;
     private String image;
+
+    // Ajouté : liste des compositions (matériaux)
+    private List<CompositionResponseDto> compositions;
 }
