@@ -20,7 +20,7 @@ public class ListingRequestDto {
     private String customBrand;
 
     private String composition;
-    private String color;
+    private List<ListingColorRequestDto> colors;
     private Integer weight;
     private Integer length;
 

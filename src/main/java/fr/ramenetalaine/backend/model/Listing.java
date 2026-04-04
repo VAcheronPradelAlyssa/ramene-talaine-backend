@@ -52,7 +52,9 @@ public class Listing {
     private List<ListingComposition> listingCompositions = new ArrayList<>();
 
     private String composition;
-    private String color;
+    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ListingColor> listingColors = new ArrayList<>();
 
     private Integer weight;
 
