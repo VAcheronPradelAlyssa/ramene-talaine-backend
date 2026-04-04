@@ -1,20 +1,23 @@
 package fr.ramenetalaine.backend.service;
 
-import fr.ramenetalaine.backend.model.Listing;
-import fr.ramenetalaine.backend.model.ListingType;
-import fr.ramenetalaine.backend.repository.ListingRepository;
+import fr.ramenetalaine.backend.model.*;
+import fr.ramenetalaine.backend.repository.*;
 import fr.ramenetalaine.backend.exception.ListingNotFoundException;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ListingService {
-
     private final ListingRepository listingRepository;
+    private final BrandRepository brandRepository;
 
     public Listing createListing(Listing listing) {
+        // Validation simple : au moins brand ou customBrand
+        if (listing.getBrand() == null && (listing.getCustomBrand() == null || listing.getCustomBrand().isBlank())) {
+            throw new IllegalArgumentException("brandId ou customBrand doit être renseigné");
+        }
         applyPriceRules(listing);
         return listingRepository.save(listing);
     }

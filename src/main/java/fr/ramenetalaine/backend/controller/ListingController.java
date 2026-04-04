@@ -1,28 +1,21 @@
 package fr.ramenetalaine.backend.controller;
 
-import fr.ramenetalaine.backend.dto.ListingRequestDto;
-import fr.ramenetalaine.backend.dto.ListingResponseDto;
-import fr.ramenetalaine.backend.model.Listing;
+import fr.ramenetalaine.backend.dto.*;
+import fr.ramenetalaine.backend.model.*;
+import fr.ramenetalaine.backend.repository.BrandRepository;
 import fr.ramenetalaine.backend.service.ListingService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/listings")
 @RequiredArgsConstructor
 public class ListingController {
-
     private final ListingService listingService;
+    private final BrandRepository brandRepository;
 
     @PostMapping
     public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request) {
@@ -61,10 +54,16 @@ public class ListingController {
     }
 
     private Listing toEntity(ListingRequestDto request) {
+        Brand brand = null;
+        if (request.getBrandId() != null) {
+            brand = brandRepository.findById(request.getBrandId())
+                    .orElseThrow(() -> new IllegalArgumentException("Marque non trouvée"));
+        }
         return Listing.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .brand(request.getBrand())
+                .brand(brand)
+                .customBrand(request.getCustomBrand())
                 .composition(request.getComposition())
                 .color(request.getColor())
                 .weight(request.getWeight())
@@ -78,11 +77,16 @@ public class ListingController {
     }
 
     private ListingResponseDto toResponseDto(Listing listing) {
+        BrandDto brandDto = null;
+        if (listing.getBrand() != null) {
+            brandDto = new BrandDto(listing.getBrand().getId(), listing.getBrand().getName());
+        }
         return ListingResponseDto.builder()
                 .id(listing.getId())
                 .title(listing.getTitle())
                 .description(listing.getDescription())
-                .brand(listing.getBrand())
+                .brand(brandDto)
+                .customBrand(listing.getCustomBrand())
                 .composition(listing.getComposition())
                 .color(listing.getColor())
                 .weight(listing.getWeight())

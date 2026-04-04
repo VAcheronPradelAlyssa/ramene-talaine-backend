@@ -12,7 +12,8 @@ public class ListingResponseDto {
     private Long id;
     private String title;
     private String description;
-    private String brand;
+    private BrandDto brand;
+    private String customBrand;
     private String composition;
     private String color;
     private Integer weight;

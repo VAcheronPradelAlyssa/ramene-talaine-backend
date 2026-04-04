@@ -1,21 +1,7 @@
 package fr.ramenetalaine.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -49,7 +35,11 @@ public class Listing {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String brand;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
+    private String customBrand;
     private String composition;
     private String color;
 

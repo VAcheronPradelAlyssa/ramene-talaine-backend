@@ -13,7 +13,11 @@ public class ListingRequestDto {
     private String title;
 
     private String description;
-    private String brand;
+
+    // Soit brandId, soit customBrand (au moins un requis)
+    private Long brandId;
+    private String customBrand;
+
     private String composition;
     private String color;
     private Integer weight;
