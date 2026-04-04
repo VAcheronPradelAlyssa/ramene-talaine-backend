@@ -29,7 +29,7 @@ public class AuthenticationService {
         }
 
         String token = UUID.randomUUID().toString();
-        tokenStore.put(token, user.getId());
+        tokenStore.put(token, String.valueOf(user.getId()));
         AuthenticatedUserDto userDto = AuthenticatedUserDto.builder()
                 .id(user.getId())
                 .prenom(user.getPrenom())
