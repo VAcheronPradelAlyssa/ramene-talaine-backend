@@ -121,7 +121,6 @@ public class ListingController {
             .description(request.getDescription())
             .brand(brand)
             .customBrand((customBrand != null && !customBrand.isBlank()) ? customBrand.trim() : null)
-            .color(request.getColor())
             .weight(request.getWeight())
             .length(request.getLength())
             .type(request.getType())
@@ -131,6 +130,28 @@ public class ListingController {
             .imageUrls(request.getImageUrls())
             .seller(seller)
             .build();
+
+        // Ajout des couleurs si présentes dans le DTO
+        if (request.getColors() != null && !request.getColors().isEmpty()) {
+            List<ListingColor> listingColors = new ArrayList<>();
+            for (ListingColorRequestDto colorDto : request.getColors()) {
+                ListingColor lc = new ListingColor();
+                lc.setListing(listing);
+                if (colorDto.getColorId() != null) {
+                    Color color = colorRepository.findById(colorDto.getColorId())
+                        .orElseThrow(() -> new IllegalArgumentException("Color non trouvée pour id : " + colorDto.getColorId()));
+                    lc.setColor(color);
+                }
+                if (colorDto.getCustomColor() != null && !colorDto.getCustomColor().isBlank()) {
+                    lc.setCustomColor(colorDto.getCustomColor().trim());
+                }
+                if (lc.getColor() == null && (lc.getCustomColor() == null || lc.getCustomColor().isBlank())) {
+                    throw new IllegalArgumentException("Chaque couleur doit avoir un colorId ou un customColor non vide");
+                }
+                listingColors.add(lc);
+            }
+            listing.setListingColors(listingColors);
+        }
 
         // Ajout des compositions si présentes dans le DTO (par id)
         if (request.getCompositions() != null && !request.getCompositions().isEmpty()) {
