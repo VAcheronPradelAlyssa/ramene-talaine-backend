@@ -1,3 +1,20 @@
+        @PutMapping("/{id}")
+        public ResponseEntity<?> updateListing(@PathVariable Long id,
+                                               @RequestBody fr.ramenetalaine.backend.dto.ListingUpdateRequestDto dto,
+                                               @RequestHeader("Authorization") String authorizationHeader) {
+            String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                    ? authorizationHeader.substring(7)
+                    : authorizationHeader;
+            try {
+                User currentUser = authenticationService.getCurrentUser(token);
+                Listing updated = listingService.updateListingByIdForUser(id, dto, currentUser);
+                return ResponseEntity.ok(toResponseDto(updated));
+            } catch (SecurityException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+        }
     @GetMapping("/me")
     public ResponseEntity<List<ListingResponseDto>> getMyListings(@RequestHeader("Authorization") String authorizationHeader) {
     String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
