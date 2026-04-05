@@ -32,7 +32,6 @@ public class Listing {
     @Column(nullable = false)
     private String title;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
 
