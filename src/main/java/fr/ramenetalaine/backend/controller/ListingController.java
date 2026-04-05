@@ -110,10 +110,16 @@ public class ListingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteListing(@PathVariable Long id) {
+    public ResponseEntity<?> deleteListing(@PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                ? authorizationHeader.substring(7)
+                : authorizationHeader;
         try {
-            listingService.deleteListing(id);
+            User currentUser = authenticationService.getCurrentUser(token);
+            listingService.deleteListingByIdForUser(id, currentUser);
             return ResponseEntity.noContent().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

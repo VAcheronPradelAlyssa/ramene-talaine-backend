@@ -1,3 +1,11 @@
+        public void deleteListingByIdForUser(Long id, User user) {
+            Listing listing = listingRepository.findById(id)
+                    .orElseThrow(() -> new ListingNotFoundException(id));
+            if (listing.getSeller() == null || !listing.getSeller().getId().equals(user.getId())) {
+                throw new SecurityException("Vous n'êtes pas autorisé à supprimer cette annonce.");
+            }
+            listingRepository.deleteById(id);
+        }
     public List<Listing> getListingsForUser(User user) {
         return listingRepository.findBySeller(user);
     }
