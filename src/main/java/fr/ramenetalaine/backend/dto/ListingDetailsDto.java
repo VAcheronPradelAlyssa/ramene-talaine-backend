@@ -1,5 +1,6 @@
 package fr.ramenetalaine.backend.dto;
 
+import fr.ramenetalaine.backend.model.ListingType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,9 @@ public class ListingDetailsDto {
     private String username;
     private LocalDateTime createdAt;
     private String image;
+    private List<String> imageUrls;
+    private List<ListingColorResponseDto> colors;
+    private ListingType type;
 
     // Ajouté : liste des compositions (matériaux)
     private List<CompositionResponseDto> compositions;

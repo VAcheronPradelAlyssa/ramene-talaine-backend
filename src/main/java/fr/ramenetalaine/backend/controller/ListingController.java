@@ -106,6 +106,22 @@ public class ListingController {
                 }
             }
 
+            List<ListingColorResponseDto> colors = new ArrayList<>();
+            if (listing.getListingColors() != null) {
+                for (ListingColor lc : listing.getListingColors()) {
+                    ListingColorResponseDto.ListingColorResponseDtoBuilder builder = ListingColorResponseDto.builder();
+                    if (lc.getColor() != null) {
+                        builder.colorId(lc.getColor().getId())
+                               .colorName(lc.getColor().getName())
+                               .groupName(lc.getColor().getGroupName());
+                    }
+                    if (lc.getCustomColor() != null && !lc.getCustomColor().isBlank()) {
+                        builder.customColor(lc.getCustomColor());
+                    }
+                    colors.add(builder.build());
+                }
+            }
+
             ListingDetailsDto dto = new ListingDetailsDto(
                 listing.getId(),
                 listing.getTitle(),
@@ -120,6 +136,9 @@ public class ListingController {
                 username,
                 listing.getCreatedAt(),
                 image,
+                listing.getImageUrls(),
+                colors,
+                listing.getType(),
                 compositions
             );
             return ResponseEntity.ok(dto);
