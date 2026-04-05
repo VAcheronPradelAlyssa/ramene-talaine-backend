@@ -1,3 +1,6 @@
+    public List<Listing> getListingsForUser(User user) {
+        return listingRepository.findBySeller(user);
+    }
 package fr.ramenetalaine.backend.service;
 
 import fr.ramenetalaine.backend.model.*;

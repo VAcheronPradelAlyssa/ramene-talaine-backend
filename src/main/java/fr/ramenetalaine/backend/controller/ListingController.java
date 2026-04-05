@@ -1,3 +1,15 @@
+    @GetMapping("/me")
+    public ResponseEntity<List<ListingResponseDto>> getMyListings(@RequestHeader("Authorization") String authorizationHeader) {
+    String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+        ? authorizationHeader.substring(7)
+        : authorizationHeader;
+    User currentUser = authenticationService.getCurrentUser(token);
+    List<ListingResponseDto> response = listingService.getListingsForUser(currentUser)
+        .stream()
+        .map(this::toResponseDto)
+        .toList();
+    return ResponseEntity.ok(response);
+    }
 package fr.ramenetalaine.backend.controller;
 
 import fr.ramenetalaine.backend.dto.*;
