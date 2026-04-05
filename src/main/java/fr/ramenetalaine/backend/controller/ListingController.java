@@ -1,33 +1,4 @@
-        @PutMapping("/{id}")
-        public ResponseEntity<?> updateListing(@PathVariable Long id,
-                                               @RequestBody fr.ramenetalaine.backend.dto.ListingUpdateRequestDto dto,
-                                               @RequestHeader("Authorization") String authorizationHeader) {
-            String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-                    ? authorizationHeader.substring(7)
-                    : authorizationHeader;
-            try {
-                User currentUser = authenticationService.getCurrentUser(token);
-                Listing updated = listingService.updateListingByIdForUser(id, dto, currentUser);
-                return ResponseEntity.ok(toResponseDto(updated));
-            } catch (SecurityException e) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-        }
-    @GetMapping("/me")
-    public ResponseEntity<List<ListingResponseDto>> getMyListings(@RequestHeader("Authorization") String authorizationHeader) {
-    String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-        ? authorizationHeader.substring(7)
-        : authorizationHeader;
-    User currentUser = authenticationService.getCurrentUser(token);
-    List<ListingResponseDto> response = listingService.getListingsForUser(currentUser)
-        .stream()
-        .map(this::toResponseDto)
-        .toList();
-    return ResponseEntity.ok(response);
-    }
-package fr.ramenetalaine.backend.controller;
+        package fr.ramenetalaine.backend.controller;
 
 import fr.ramenetalaine.backend.dto.*;
 import fr.ramenetalaine.backend.model.Composition;
@@ -53,6 +24,37 @@ public class ListingController {
     private final AuthenticationService authenticationService;
     private final fr.ramenetalaine.backend.repository.CompositionRepository compositionRepository;
     private final fr.ramenetalaine.backend.repository.ColorRepository colorRepository;
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateListing(@PathVariable Long id,
+                                           @RequestBody fr.ramenetalaine.backend.dto.ListingUpdateRequestDto dto,
+                                           @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                ? authorizationHeader.substring(7)
+                : authorizationHeader;
+        try {
+            User currentUser = authenticationService.getCurrentUser(token);
+            Listing updated = listingService.updateListingByIdForUser(id, dto, currentUser);
+            return ResponseEntity.ok(toResponseDto(updated));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<ListingResponseDto>> getMyListings(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                ? authorizationHeader.substring(7)
+                : authorizationHeader;
+        User currentUser = authenticationService.getCurrentUser(token);
+        List<ListingResponseDto> response = listingService.getListingsForUser(currentUser)
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<?> createListing(@Valid @RequestBody ListingRequestDto request, @RequestHeader("Authorization") String authorizationHeader) {
