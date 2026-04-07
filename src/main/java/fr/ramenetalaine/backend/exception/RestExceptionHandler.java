@@ -12,4 +12,14 @@ public class RestExceptionHandler {
     public ResponseEntity<String> handleListingNotFound(ListingNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException exception) {
+        String message = exception.getMessage();
+        if ("Token invalide".equals(message)
+                || "Utilisateur introuvable pour ce token".equals(message)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
 }

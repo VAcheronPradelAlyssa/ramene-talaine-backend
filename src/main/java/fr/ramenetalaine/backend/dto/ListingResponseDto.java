@@ -12,9 +12,10 @@ public class ListingResponseDto {
     private Long id;
     private String title;
     private String description;
-    private String brand;
+    private BrandDto brand;
+    private String customBrand;
     private String composition;
-    private String color;
+    private List<ListingColorResponseDto> colors;
     private Integer weight;
     private Integer length;
     private ListingType type;

@@ -4,6 +4,7 @@ import fr.ramenetalaine.backend.model.ListingType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import fr.ramenetalaine.backend.dto.CompositionRequestDto;
 import lombok.Data;
 
 @Data
@@ -13,9 +14,13 @@ public class ListingRequestDto {
     private String title;
 
     private String description;
-    private String brand;
+
+    // Soit brandId, soit customBrand (au moins un requis)
+    private Long brandId;
+    private String customBrand;
+
     private String composition;
-    private String color;
+    private List<ListingColorRequestDto> colors;
     private Integer weight;
     private Integer length;
 
@@ -26,4 +31,7 @@ public class ListingRequestDto {
     private String city;
     private String postalCode;
     private List<String> imageUrls;
+
+    // Ajout pour compositions
+    private List<CompositionRequestDto> compositions;
 }

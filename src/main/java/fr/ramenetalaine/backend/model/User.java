@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @ToString(exclude = "password")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String prenom;
     private String nom;

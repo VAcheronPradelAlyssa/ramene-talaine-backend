@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CurrentUserDto {
-    private String id;
+    private Long id;
     private String prenom;
     private String nom;
     private String surnom;
