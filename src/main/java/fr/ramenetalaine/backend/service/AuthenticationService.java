@@ -20,6 +20,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final Map<String, String> tokenStore = new ConcurrentHashMap<>();
 
+    public Map<String, String> getTokenStore() {
+        return tokenStore;
+    }
+
     public LoginResponseDto login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Email ou mot de passe invalide"));

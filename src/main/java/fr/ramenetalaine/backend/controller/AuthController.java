@@ -22,7 +22,22 @@ public class AuthController {
     public ResponseEntity<?> signup(@RequestBody UserSignupDto dto) {
         try {
             User created = userService.register(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            // Générer le token et le DTO utilisateur comme lors du login
+            String token = java.util.UUID.randomUUID().toString();
+            // Stocker le token dans le tokenStore d'AuthenticationService
+            authenticationService.getTokenStore().put(token, String.valueOf(created.getId()));
+            fr.ramenetalaine.backend.dto.AuthenticatedUserDto userDto = fr.ramenetalaine.backend.dto.AuthenticatedUserDto.builder()
+                    .id(created.getId())
+                    .prenom(created.getPrenom())
+                    .nom(created.getNom())
+                    .email(created.getEmail())
+                    .surnom(created.getSurnom())
+                    .ville(created.getVille())
+                    .img(created.getImg())
+                    .createdAt(created.getCreatedAt())
+                    .build();
+            fr.ramenetalaine.backend.dto.LoginResponseDto response = new fr.ramenetalaine.backend.dto.LoginResponseDto(token, userDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
